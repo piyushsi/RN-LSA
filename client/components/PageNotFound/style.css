@@ -1,0 +1,35 @@
+
+/* Agora definimos as característica do título */
+.h1_ {
+    padding-top:100px;
+    font-size: 60px;
+    color:#3F51B5;
+  }
+  
+  /* Agora definimos as característica do parágrafo. */
+  .p_ {
+    font-size: 20px;
+    color:#3F51B5;
+    white-space: nowrap;
+    border-right: solid 3px #fff;
+    overflow: hidden; 
+  }
+  
+  /* Animação, sua velocidade... */
+  .p_ {
+    animation: animated-text 4s steps(25) 1s 1 normal both, animated-cursor 600ms steps(25) infinite; 
+  }
+  
+  /* Animação do Parágrafo */
+  
+  @keyframes animated-text{
+    from{width: 0;}
+    to{width: 340px;}
+  }
+  
+  /* cursor animations */
+  
+  @keyframes animated-cursor{
+    from{border-right-color: #fff;}
+    to{border-right-color: transparent;}
+  }
