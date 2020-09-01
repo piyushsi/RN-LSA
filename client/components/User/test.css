@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css?family=Comfortaa&display=swap");
+.hero {
+  font-family: "Comfortaa", cursive;
+  text-align: center;
+}
+
+.option {
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: white;
+}
+.option:hover {
+  background: #f7f7f7;
+}
+.option:hover span {
+  background: #00d1b2;
+  color: white;
+}
+.answer{
+    background: #f7f7f7;
+}
+.answer span{
+    background: #00d1b2;
+    color: white;
+}
+
+
+.option span {
+  border-radius: 5px;
+  border: solid 1px #00d1b2;
+  padding: 0.2rem 0.5rem 0;
+  width: 2.5rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  color: #00d1b2;
+}
+
+.navigation:before,
+.navigation:after {
+  content: " - ";
+}

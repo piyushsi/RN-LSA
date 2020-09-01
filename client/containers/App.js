@@ -13,10 +13,11 @@ import Loader from "../components/Loader";
 import PageNotFound from "../components/PageNotFound";
 import User from "../components/User";
 import Admin from "../components/Admin";
+import Test from "../components/User/TestDashboard"
 
 const grantPermission = (requestedRoles) => {
   const permittedRoles = JSON.parse(localStorage.user).type;
-  return requestedRoles.includes(permittedRoles) ? true : false;
+  return requestedRoles.includes(permittedRoles) ? 1 : '';
 };
 
 function UserBasedRouting({ component: Component, roles, ...rest }) {
@@ -60,9 +61,7 @@ function App(props) {
   return (
     <div>
       {token && props.isAuthInProgress ? (
-        <Switch>
-          <Route component={Loader} />
-        </Switch>
+        <Loader/>
       ) : (
         <>
           {token && props.isAuthDone ? (
@@ -80,6 +79,12 @@ function App(props) {
                   exact
                   path="/user"
                   component={User}
+                  roles={["admin", "user"]}
+                />
+                <UserBasedRouting
+                  exact
+                  path="/user/test"
+                  component={Test}
                   roles={["admin", "user"]}
                 />
                 <Route component={PageNotFound} />

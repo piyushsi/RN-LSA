@@ -10,7 +10,8 @@ import Grid from "@material-ui/core/Grid";
 import StarIcon from "@material-ui/icons/StarBorder";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
+import { Link } from 'react-router-dom'
+// import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Box from "@material-ui/core/Box";
@@ -77,29 +78,24 @@ const useStyles = makeStyles((theme) => ({
 
 const tiers = [
   {
-    title: "Free",
-    price: "0",
+    title: "Pro",
+    price: "15",
     description: [
-      "10 users included",
-      "2 GB of storage",
+      "25 users included",
+      "15 GB of storage",
       "Help center access",
       "Email support",
     ],
-    buttonText: "Sign up for free",
-    buttonVariant: "outlined",
+    buttonText: "Coming Soon..",
+    buttonVariant: "contained",
   },
   {
-    title: "Pro",
+    title: "Free",
     subheader: "Most popular",
-    price: "15",
-    description: [
-      "20 users included",
-      "10 GB of storage",
-      "Help center access",
-      "Priority email support",
-    ],
-    buttonText: "Get started",
-    buttonVariant: "contained",
+    price: "0",
+    description: ["Help center access", "Priority email support"],
+    buttonText: "Get started with Test",
+    buttonVariant: "outlined",
   },
   {
     title: "Enterprise",
@@ -110,8 +106,8 @@ const tiers = [
       "Help center access",
       "Phone & email support",
     ],
-    buttonText: "Contact us",
-    buttonVariant: "outlined",
+    buttonText: "Coming Soon..",
+    buttonVariant: "contained",
   },
 ];
 const footers = [
@@ -150,7 +146,7 @@ export default function Pricing() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar
+      {/* <AppBar
         position="static"
         color="default"
         elevation={0}
@@ -200,7 +196,7 @@ export default function Pricing() {
             Login
           </Button>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       {/* Hero unit */}
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography
@@ -270,7 +266,11 @@ export default function Pricing() {
                     variant={tier.buttonVariant}
                     color="primary"
                   >
-                    {tier.buttonText}
+                    {tier.price == 0 ? (
+                      <Link to="/user/test"  style={{ textDecoration: 'none' }}>{tier.buttonText}</Link>
+                    ) : (
+                      tier.buttonText
+                    )}
                   </Button>
                 </CardActions>
               </Card>
