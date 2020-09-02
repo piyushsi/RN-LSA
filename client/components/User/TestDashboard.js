@@ -6,12 +6,14 @@ import StepButton from "@material-ui/core/StepButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Test from "./Test";
+import { connect } from "react-redux";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     marginTop: "3rem",
-    textAlign:'center'
+    textAlign: "center",
   },
   button: {
     marginRight: theme.spacing(1),
@@ -25,15 +27,61 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function TestDashBoard(props) {
+  console.log(props)
+  const completedData = { 0: true, 1: true };
+  // Fetch Data
+  const data = () => {
+    const Title = "Interest Test";
+    const Data = [
+      {
+        question: "What does CSS stand for?",
+        options: [
+          "Cascading Style Sheets",
+          "Creative Style Sheets",
+          "Computer Style Sheets",
+          "Colorful Style Sheets",
+        ],
+        points: [4, 0, 0, 0],
+      },
+      {
+        question: "What does PS stand for?",
+        options: ["Play Station", "Piyush Sinha", "PSP", "PSPSP"],
+        points: [0, 4, 0, 0],
+      },
+      {
+        question: "IPS का पूर्ण रूप क्या है??",
+        options: [
+          "Indian Police Service",
+          "In-Plane Switching",
+          "Internet Protocol Service",
+          "भारतीय पुलिस सेवा",
+        ],
+        points: [1, 2, 3, 4],
+      },
+    ];
 
+    const Steps = [
+      "Interest Test",
+      "Personality Test",
+      "Abilities Test",
+      "Career Inspirational Test",
+    ];
+    return { Title, Data, Steps };
+  };
 
-export default function HorizontalNonLinearStepper() {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [completed, setCompleted] = React.useState({});
+  const [activeStep, setActiveStep] = React.useState(
+    Object.keys(completedData).length
+  );
+  const [completed, setCompleted] = React.useState(completedData);
   const [completedSet, setCompletedSet] = React.useState(false);
   const [next, setNext] = React.useState(false);
 
+  //Steps
+  function getSteps() {
+    return data().Steps;
+  }
 
   const steps = getSteps();
 
@@ -65,56 +113,30 @@ export default function HorizontalNonLinearStepper() {
     setNext(false);
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
+  // Current Step
   const handleStep = (step) => () => {
     setActiveStep(step);
   };
 
+  // next Button onClick
   const handleComplete = () => {
     const newCompleted = completed;
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
-    setNext(true)
+    setNext(true);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
-  };
+  // props for children Components
   const done = () => {
     setCompletedSet(true);
   };
 
-//Steps
-  function getSteps() {
-    return [
-      "Interest Test",
-      "Personality Test",
-      "Abilities Test",
-      "Career Inspirational Test",
-    ];
-  }
-
-
+  // passing Children Components for Each Steps
   function getStepContent(step, done) {
-    return completedSet?'':<Test data={done} />
-    // switch (step) {
-    //   case 0:
-    //     return completed?'':<Test data={done} />;
-    //   case 1:
-    //     return <Test data={done} />;
-    //   case 2:
-    //     return <Test data={done} />;
-    //   case 3:
-    //     return <Test data={done} />;
-    //   default:
-    //     return "Unknown step";
-    // }
+    return completedSet ? "" : <Test data={{ done, data: data() }} />;
   }
-  // console.log(activeStep,completed,completedSet)
+
+  console.log(activeStep);
 
   return (
     <div className={classes.root}>
@@ -136,7 +158,6 @@ export default function HorizontalNonLinearStepper() {
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
             </Typography>
-            {/* <Button onClick={handleReset}>Reset</Button> */}
           </div>
         ) : (
           <div>
@@ -144,22 +165,20 @@ export default function HorizontalNonLinearStepper() {
               {getStepContent(activeStep, done)}
             </Typography>
             <div>
-              {/* <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.button}
-              >
-                Back
-              </Button> */}
-              {next? <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                className={classes.button}
-              >
-                Next
-              </Button>:''}
-             
+
+              {next ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleNext}
+                  className={classes.button}
+                >
+                  Next
+                </Button>
+              ) : (
+                ""
+              )}
+
               {activeStep !== steps.length &&
                 (completed[activeStep] ? (
                   <Typography variant="caption" className={classes.completed}>
@@ -187,3 +206,10 @@ export default function HorizontalNonLinearStepper() {
     </div>
   );
 }
+
+
+const mapStateToProps = ({ user }) => {
+  return user;
+};
+
+export default connect(mapStateToProps)(TestDashBoard);

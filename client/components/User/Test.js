@@ -13,36 +13,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Title = "Interest Test";
-const Data = [
-  {
-    question: "What does CSS stand for?",
-    options: [
-      "Cascading Style Sheets",
-      "Creative Style Sheets",
-      "Computer Style Sheets",
-      "Colorful Style Sheets",
-    ],
-    points: [4, 0, 0, 0],
-  },
-  {
-    question: "What does PS stand for?",
-    options: ["Play Station", "Piyush Sinha", "PSP", "PSPSP"],
-    points: [0, 4, 0, 0],
-  },
-  {
-    question: "IPS का पूर्ण रूप क्या है??",
-    options: [
-      "Indian Police Service",
-      "In-Plane Switching",
-      "Internet Protocol Service",
-      "भारतीय पुलिस सेवा",
-    ],
-    points: [1, 2, 3, 4],
-  },
-];
-
 export default function ListDividers(props) {
+  const Title = props.data.data.Title;
+  const Data = props.data.data.Data;
   const classes = useStyles();
   var [count, setCount] = React.useState(0);
   var [title, setTitle] = React.useState(Title);
@@ -59,9 +32,9 @@ export default function ListDividers(props) {
   };
 
   const submit = () => {
-    if (answer && count == data.length - 1 ) {
+    if (answer && count == data.length - 1) {
       setCompleted(true);
-      props.data();
+      props.data.done();
       answerPush(answer);
 
       var points = answers
@@ -70,8 +43,7 @@ export default function ListDividers(props) {
         })
         .join("+");
 
-      alert("Total Points:"+eval(points));
-
+      alert("Total Points:" + eval(points));
     } else {
       if (answer) {
         answerPush(answer);
@@ -96,7 +68,12 @@ export default function ListDividers(props) {
   };
 
   const open = Boolean(anchorEl);
+
   const id = open ? "simple-popover" : undefined;
+
+  
+
+
   return (
     <section class="hero is-primary is-fullheight">
       <div class="hero-body">
