@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
 import { Link } from "@material-ui/core";
 import { Link as Rlink } from "react-router-dom";
+import "../scss/index.scss";
 import React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -22,6 +23,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
 import Button from "@material-ui/core/Button";
 import { logoutUser } from "../store/actions";
+import svg from "./hero.svg";
 
 const drawerWidth = 240;
 
@@ -56,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
   buttons: {
     marginLeft: "auto",
   },
+  button2: {
+    textAlign: "center",
+  },
   drawerPaper: {
     width: drawerWidth,
   },
@@ -82,6 +87,10 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
     marginLeft: 0,
+  },
+  img: {
+    margin: ".5rem",
+    height: "3rem",
   },
 }));
 
@@ -125,9 +134,13 @@ function Header(props) {
             <></>
           )}
 
-          <Typography variant="h6" noWrap>
-            SWOT
-          </Typography>
+          {open ? (
+            ""
+          ) : (
+            <Typography variant="h6" noWrap>
+              SWOT
+            </Typography>
+          )}
           {!props.isAuthDone ? (
             <div className={classes.buttons}>
               <Link href="/login">
@@ -140,7 +153,7 @@ function Header(props) {
               </Link>
             </div>
           ) : (
-            <div className={classes.buttons}>
+            <div className={classes.buttons + ` side ${open ? "none" : ""}`}>
               <Button variant="contained" color="primary">
                 {props.currentUser
                   ? props.currentUser.firstName[0] +
@@ -164,6 +177,25 @@ function Header(props) {
             paper: classes.drawerPaper,
           }}
         >
+          <div className={classes.button2 + ` side ${!open ? "none " : ""}`}>
+            <img className={classes.img} src={svg} />
+            <br />
+            <Typography variant="h6" noWrap>
+              SWOT
+            </Typography>
+            <br />
+            <Button variant="contained" color="primary">
+              {props.currentUser
+                ? props.currentUser.firstName +
+                  " " +
+                  props.currentUser.lastName[0] +
+                  "."
+                : "..."}
+            </Button>
+            <Button variant="contained" onClick={() => logoutUser()}>
+              LogOut
+            </Button>
+          </div>
           <div className={classes.drawerHeader}>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "ltr" ? (
@@ -173,8 +205,8 @@ function Header(props) {
               )}
             </IconButton>
           </div>
-          <Divider />
 
+          <Divider />
           <List>
             <Rlink to="/" style={{ textDecoration: "none", color: "black" }}>
               <ListItem button key={"Home"}>

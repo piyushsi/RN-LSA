@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
   },
   img: {
-    width: "40vw",
-    height:"50vh"
+    width: "50vw",
+    height:"20rem"
   },
 }));
 

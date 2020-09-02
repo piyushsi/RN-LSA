@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
   main: {
     marginTop: "1rem",
+    width: "100%",
   },
   demo: {
     margin: "3rem",
@@ -209,7 +210,7 @@ function AddTest(props) {
   return (
     <Grid container spacing={3} component="main" className={classes.main}>
       {/* Add Test Title here */}
-      <Grid item xs={selectedTest ? 4 : 12}>
+      <Grid item xs={12} sm={8} md={selectedTest?5:12}>
         <Typography variant="h6" className={classes.title}>
           {allTests ? (
             allTests.length == 0 ? (
@@ -270,7 +271,7 @@ function AddTest(props) {
             onSubmit={() => handleSubmitTest()}
             onError={(errors) => console.log(errors)}
           >
-            <Grid item xs={selectedTest ? 12 : 4}>
+            <Grid item xs={12}>
               <Typography component="h1" variant="h5">
                 Add Test
               </Typography>
@@ -306,7 +307,7 @@ function AddTest(props) {
       </Grid>
       {/* Add Title Content here */}
       {selectedTest ? (
-        <Grid item xs={7}>
+        <Grid item xs={12} sm={8} md={5}>
           <Typography variant="h6" className={classes.title}>
             {"List of Questions in " + selecctedTestTitle.title}
           </Typography>

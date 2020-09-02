@@ -1,0 +1,16 @@
+.side {
+  animation-name: side;
+  animation-duration: 0.4s;
+  position: relative;
+}
+.none {
+    display: none;
+}
+@keyframes side {
+  0% {
+    left: 500px;
+  }
+  100% {
+    left: 0px;
+  }
+}
