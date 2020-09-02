@@ -154,69 +154,68 @@ function Header(props) {
           )}
         </Toolbar>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
-        <Divider />
+      {props.isAuthDone ? (
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </div>
+          <Divider />
 
-        <List>
-          <Rlink to="/" style={{ textDecoration: "none", color: "black" }}>
-            <ListItem button key={"Home"}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Home"} />
-            </ListItem>
-          </Rlink>
-        </List>
-        <Divider />
-        <List>
-          <Rlink
-            to={
-              "/" + props.currentUser && props.currentUser
-                ? props.currentUser.userType
-                : ""
-            }
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <ListItem button key={"DashBoard"}>
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary={"DashBoard"} />
-            </ListItem>
-          </Rlink>
-        </List>
-        <List>
-          <Rlink to={
-              "/" + props.currentUser && props.currentUser
-                ? props.currentUser.userType+'/test'
-                : ""
-            } style={{ textDecoration: "none", color: "black" }}>
-            <ListItem button key={"Test"}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Test"} />
-            </ListItem>
-          </Rlink>
-        </List>
-      </Drawer>
+          <List>
+            <Rlink to="/" style={{ textDecoration: "none", color: "black" }}>
+              <ListItem button key={"Home"}>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Home"} />
+              </ListItem>
+            </Rlink>
+          </List>
+          <Divider />
+          <List>
+            <Rlink
+              to={"/" + props.currentUser.userType}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <ListItem button key={"DashBoard"}>
+                <ListItemIcon>
+                  <MailIcon />
+                </ListItemIcon>
+                <ListItemText primary={"DashBoard"} />
+              </ListItem>
+            </Rlink>
+          </List>
+          <List>
+            <Rlink
+              to={"/" + props.currentUser.userType + "/test"}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <ListItem button key={"Test"}>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Test"} />
+              </ListItem>
+            </Rlink>
+          </List>
+        </Drawer>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

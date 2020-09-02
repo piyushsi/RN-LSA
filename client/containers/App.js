@@ -13,6 +13,8 @@ import Loader from "../components/Loader";
 import PageNotFound from "../components/PageNotFound";
 import User from "../components/User";
 import Admin from "../components/Admin";
+import SubAdmin from "../components/SubAdmin";
+
 import Test from "../components/User/TestDashboard";
 import AddTest from "../components/Admin/AddTest";
 
@@ -75,15 +77,26 @@ function App(props) {
                   exact
                   path="/admin"
                   component={Admin}
-                  roles={["admin","subadmin"]}
+                  roles={["admin", "subadmin"]}
+                />
+                <UserBasedRouting
+                  exact
+                  path="/subadmin"
+                  component={SubAdmin}
+                  roles={["admin", "subadmin"]}
+                />
+                <UserBasedRouting
+                  exact
+                  path="/subadmin/test"
+                  component={AddTest}
+                  roles={["subadmin"]}
                 />
                 <UserBasedRouting
                   exact
                   path="/admin/test"
                   component={AddTest}
-                  roles={["admin","subadmin"]}
+                  roles={["admin", "subadmin"]}
                 />
-                
 
                 <UserBasedRouting
                   exact
@@ -95,7 +108,7 @@ function App(props) {
                   exact
                   path="/user/test"
                   component={Test}
-                  roles={["user","subadmin"]}
+                  roles={["user", "subadmin"]}
                 />
                 <Route component={PageNotFound} />
               </Switch>

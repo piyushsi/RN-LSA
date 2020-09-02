@@ -160,7 +160,7 @@ export default function Pricing() {
           color="textPrimary"
           gutterBottom
         >
-          Admin Panel
+          SubAdmin Panel
         </Typography>
         <Typography
           variant="h5"

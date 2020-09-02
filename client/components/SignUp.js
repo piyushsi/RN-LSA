@@ -14,6 +14,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import {
   ValidatorForm,
   TextValidator as TextField,
@@ -76,15 +78,16 @@ function SignUp(props) {
     props
       .dispatch(userSignUp(data))
       .then((res) => {
+        console.log(res);
         if (res.success) return props.history.push("/");
-        if (res.err.errmsg.includes("duplicate"))
+        if (res.message.includes("already"))
           return setData((prevState) => ({
             ...prevState,
             msg: "User with same email already exists",
           }));
       })
       .catch((err) => {
-        console.log(err, "signup failed");
+        console.log(err, "signup failed", data.msg);
         props.dispatch(
           userAuthProgress({ isAuthInProgress: false, isAuthDone: false })
         );
@@ -186,7 +189,10 @@ function SignUp(props) {
                 onChange={handleChange}
                 value={data.userType}
                 validators={["required", "matchRegexp:user|admin|subadmin"]}
-                errorMessages={["this field is required", "user or admin or subadmin"]}
+                errorMessages={[
+                  "this field is required",
+                  "user or admin or subadmin",
+                ]}
               />
             </Grid>
 
@@ -197,6 +203,9 @@ function SignUp(props) {
               />
             </Grid>
           </Grid>
+          <Typography style={{ color: "red" }}>
+            {data.msg ? data.msg : ""}
+          </Typography>
           <Button
             type="submit"
             fullWidth
@@ -204,7 +213,7 @@ function SignUp(props) {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            {props.isAuthInProgress ? <CircularProgress /> : "Sign Up"}
           </Button>
         </ValidatorForm>
         <Grid container justify="flex-end">
