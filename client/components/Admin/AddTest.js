@@ -48,9 +48,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(13),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
     padding: "2rem",
     textAlign: "center",
+    margin:"2rem"
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
   main: {
     marginTop: "1rem",
     width: "100%",
+    justifyContent:"center"
   },
   demo: {
     margin: "3rem",
@@ -271,7 +272,7 @@ function AddTest(props) {
             onSubmit={() => handleSubmitTest()}
             onError={(errors) => console.log(errors)}
           >
-            <Grid item xs={12}>
+            <Grid item xs={12} md={selectedTest?12: 6}>
               <Typography component="h1" variant="h5">
                 Add Test
               </Typography>
@@ -299,7 +300,7 @@ function AddTest(props) {
                 color="primary"
                 className={classes.submit}
               >
-                Add Test
+                Add
               </Button>
             </Grid>
           </ValidatorForm>
