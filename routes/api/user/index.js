@@ -40,9 +40,18 @@ router.post("/login", (req, res) => {
   var { email, password } = req.body;
   User.findOne({ email }, async (err, user) => {
     if (err) return res.json({ type: "user", success: false });
-    if (!user) return res.json({ type: "user", success: false });
+    if (!user)
+      return res.json({
+        type: "user",
+        success: false,
+        message: "Email not Registered",
+      });
     if (!user.verifyPassword(password))
-      return res.json({ type: "user", success: false });
+      return res.json({
+        type: "user",
+        success: false,
+        message: "Incorrect Password",
+      });
     var token = await auth.generateJWT(user);
     res.json({ data: user, type: "user", success: true, token });
   });
@@ -56,7 +65,7 @@ router.get("/me", auth.verifyToken, async (req, res) => {
 router.post("/test", (req, res) => {
   var data = req.body;
   Test.create(data, (err, createdTest) => {
-    res.json({success:!err?true:false})
+    res.json({ success: !err ? true : false });
   });
 });
 
@@ -93,17 +102,17 @@ router.get("/tests", async (req, res) => {
   }
 });
 
-router.delete('/test', (req,res)=>{
-  Test.findByIdAndRemove(req.body.id,(err,deleted)=>{
-    res.json({success:!err?true:false})
-  })
-})
+router.delete("/test", (req, res) => {
+  Test.findByIdAndRemove(req.body.id, (err, deleted) => {
+    res.json({ success: !err ? true : false });
+  });
+});
 
-router.delete('/test/question', (req,res)=>{
-  console.log(req.body.id)
-  Question.findByIdAndRemove(req.body.id,(err,deleted)=>{
-    res.json({success:!err?true:false})
-  })
-})
+router.delete("/test/question", (req, res) => {
+  console.log(req.body.id);
+  Question.findByIdAndRemove(req.body.id, (err, deleted) => {
+    res.json({ success: !err ? true : false });
+  });
+});
 
 module.exports = router;

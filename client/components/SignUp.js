@@ -213,7 +213,11 @@ function SignUp(props) {
             color="primary"
             className={classes.submit}
           >
-            {props.isAuthInProgress ? <CircularProgress /> : "Sign Up"}
+            {props.isAuthInProgress ? (
+              <CircularProgress style={{ color: "white" }} />
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </ValidatorForm>
         <Grid container justify="flex-end">

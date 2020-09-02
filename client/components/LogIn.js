@@ -13,6 +13,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import {
   ValidatorForm,
   TextValidator as TextField,
@@ -72,11 +74,12 @@ function SignIn(props) {
     props
       .dispatch(userLogin(data))
       .then((res) => {
+        console.log(res);
         if (res.success) return props.history.push("/");
-        if (res.err.errmsg.includes("duplicate"))
+        if (!res.success)
           return setData((prevState) => ({
             ...prevState,
-            msg: "User with same email already exists",
+            msg: res.message,
           }));
       })
       .catch((err) => {
@@ -141,6 +144,9 @@ function SignIn(props) {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
+          <Typography style={{ color: "red" }}>
+            {data.msg ? data.msg : ""}
+          </Typography>
           <Button
             type="submit"
             fullWidth
@@ -148,7 +154,7 @@ function SignIn(props) {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            {props.isAuthInProgress ? <CircularProgress style={{color:'white'}} /> : "Sign In"}
           </Button>
         </ValidatorForm>
         <Grid container>
