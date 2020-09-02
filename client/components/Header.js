@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { Link } from "@material-ui/core";
+import { Link as Rlink } from "react-router-dom";
 import React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -99,7 +100,7 @@ function Header(props) {
   const logoutUser = () => {
     localStorage.clear();
     window.location.reload();
-    };
+  };
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -125,9 +126,7 @@ function Header(props) {
           )}
 
           <Typography variant="h6" noWrap>
-            <Link color="inherit" href="/">
-              SWOT
-            </Link>
+            SWOT
           </Typography>
           {!props.isAuthDone ? (
             <div className={classes.buttons}>
@@ -143,7 +142,10 @@ function Header(props) {
           ) : (
             <div className={classes.buttons}>
               <Button variant="contained" color="primary">
-                {props.currentUser ? props.currentUser.firstName[0]+props.currentUser.lastName[0] : "..."}
+                {props.currentUser
+                  ? props.currentUser.firstName[0] +
+                    props.currentUser.lastName[0]
+                  : "..."}
               </Button>
               <Button variant="contained" onClick={() => logoutUser()}>
                 LogOut
@@ -171,28 +173,48 @@ function Header(props) {
           </IconButton>
         </div>
         <Divider />
+
         <List>
-        {/* ["Boards", "Starred", "Send email", "Drafts"] */}
-          {['Home','Notification'].map((text, index) => (
-            <ListItem button key={text}>
+          <Rlink to="/" style={{ textDecoration: "none", color: "black" }}>
+            <ListItem button key={"Home"}>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <InboxIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={"Home"} />
             </ListItem>
-          ))}
+          </Rlink>
         </List>
         <Divider />
         <List>
-        {/* ["All mail", "Trash", "Spam"] */}
-          {['Profile'].map((text, index) => (
-            <ListItem button key={text}>
+          <Rlink
+            to={
+              "/" + props.currentUser && props.currentUser
+                ? props.currentUser.userType
+                : ""
+            }
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <ListItem button key={"DashBoard"}>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                <MailIcon />
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={"DashBoard"} />
             </ListItem>
-          ))}
+          </Rlink>
+        </List>
+        <List>
+          <Rlink to={
+              "/" + props.currentUser && props.currentUser
+                ? props.currentUser.userType+'/test'
+                : ""
+            } style={{ textDecoration: "none", color: "black" }}>
+            <ListItem button key={"Test"}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Test"} />
+            </ListItem>
+          </Rlink>
         </List>
       </Drawer>
     </div>

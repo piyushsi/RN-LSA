@@ -75,14 +75,15 @@ function App(props) {
                   exact
                   path="/admin"
                   component={Admin}
-                  roles={["admin"]}
+                  roles={["admin","subadmin"]}
                 />
                 <UserBasedRouting
                   exact
                   path="/admin/test"
                   component={AddTest}
-                  roles={["admin"]}
+                  roles={["admin","subadmin"]}
                 />
+                
 
                 <UserBasedRouting
                   exact
@@ -94,7 +95,7 @@ function App(props) {
                   exact
                   path="/user/test"
                   component={Test}
-                  roles={["user"]}
+                  roles={["user","subadmin"]}
                 />
                 <Route component={PageNotFound} />
               </Switch>

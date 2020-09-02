@@ -99,4 +99,11 @@ router.delete('/test', (req,res)=>{
   })
 })
 
+router.delete('/test/question', (req,res)=>{
+  console.log(req.body.id)
+  Question.findByIdAndRemove(req.body.id,(err,deleted)=>{
+    res.json({success:!err?true:false})
+  })
+})
+
 module.exports = router;

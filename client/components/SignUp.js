@@ -185,8 +185,8 @@ function SignUp(props) {
                 autoFocus
                 onChange={handleChange}
                 value={data.userType}
-                validators={["required", "matchRegexp:user|admin"]}
-                errorMessages={["this field is required", "user or admin"]}
+                validators={["required", "matchRegexp:user|admin|subadmin"]}
+                errorMessages={["this field is required", "user or admin or subadmin"]}
               />
             </Grid>
 

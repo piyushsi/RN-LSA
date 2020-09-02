@@ -1,20 +1,11 @@
 import { connect } from "react-redux";
 import React, { useState, useEffect } from "react";
-
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-// import TextField from '@material-ui/core/TextField';
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import Container from "@material-ui/core/Container";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -34,7 +25,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
 import {
   ValidatorForm,
   TextValidator as TextField,
@@ -112,7 +102,10 @@ function AddTest(props) {
 
   const [allTests, setAllTests] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
+
   const [SelectedDeleteTest, setSelectedDeleteTest] = useState("null");
+  const [SelectedDeleteQuestion, setSelectedDeleteQuestion] = useState("null");
 
   const handleClickOpen = (props) => {
     setSelectedDeleteTest(props);
@@ -123,6 +116,16 @@ function AddTest(props) {
     setOpen(false);
   };
 
+  const handleClickOpen2 = (props) => {
+    setSelectedDeleteQuestion(props);
+
+    setOpen2(true);
+  };
+
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+
   const deleteTest = () => {
     var id = SelectedDeleteTest.id;
     Axios.delete("/api/v1/user/test", { data: { id } }).then((res) => {
@@ -130,6 +133,22 @@ function AddTest(props) {
         getAllTest();
         handleClose();
         setSelectedTest(null);
+      }
+    });
+  };
+
+  const deleteQuestion = () => {
+    var id = SelectedDeleteQuestion.id;
+    var filter = selectedTest.filter((el) => {
+      return el._id != id;
+    });
+    console.log(id, filter);
+    Axios.delete("/api/v1/user/test/question", { data: { id } }).then((res) => {
+      console.log(res);
+      if (res.data.success) {
+        getAllTest();
+        handleClose2();
+        setSelectedTest(filter);
       }
     });
   };
@@ -186,12 +205,21 @@ function AddTest(props) {
   useEffect(() => {
     allTests ? "" : getAllTest();
   });
+  console.log(allTests);
   return (
     <Grid container spacing={3} component="main" className={classes.main}>
       {/* Add Test Title here */}
       <Grid item xs={selectedTest ? 4 : 12}>
         <Typography variant="h6" className={classes.title}>
-          List of Test {allTests ? "" : <CircularProgress />}
+          {allTests ? (
+            allTests.length == 0 ? (
+              "No Test are there"
+            ) : (
+              "List of Test"
+            )
+          ) : (
+            <CircularProgress />
+          )}
         </Typography>
 
         {allTests
@@ -289,7 +317,12 @@ function AddTest(props) {
                     <List dense={dense}>
                       <ListItem>
                         <ListItemText primary={el.question} />
-                        <Tooltip title="Delete">
+                        <Tooltip
+                          title="Delete"
+                          onClick={() =>
+                            handleClickOpen2({ title: el.question, id: el._id })
+                          }
+                        >
                           <IconButton aria-label="delete">
                             <DeleteIcon />
                           </IconButton>
@@ -504,6 +537,31 @@ function AddTest(props) {
             No
           </Button>
           <Button onClick={deleteTest} color="primary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog Box 2*/}
+      <Dialog
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Do you want to delete this Question?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {SelectedDeleteQuestion.title}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose2} color="primary">
+            No
+          </Button>
+          <Button onClick={deleteQuestion} color="primary" autoFocus>
             Yes
           </Button>
         </DialogActions>

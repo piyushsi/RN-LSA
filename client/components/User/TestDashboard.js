@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -7,7 +7,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Test from "./Test";
 import { connect } from "react-redux";
-
+import Axios from "axios";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,59 +29,50 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TestDashBoard(props) {
-  console.log(props)
-  const completedData = { 0: true, 1: true };
-  // Fetch Data
-  const data = () => {
-    const Title = "Interest Test";
-    const Data = [
-      {
-        question: "What does CSS stand for?",
-        options: [
-          "Cascading Style Sheets",
-          "Creative Style Sheets",
-          "Computer Style Sheets",
-          "Colorful Style Sheets",
-        ],
-        points: [4, 0, 0, 0],
-      },
-      {
-        question: "What does PS stand for?",
-        options: ["Play Station", "Piyush Sinha", "PSP", "PSPSP"],
-        points: [0, 4, 0, 0],
-      },
-      {
-        question: "IPS का पूर्ण रूप क्या है??",
-        options: [
-          "Indian Police Service",
-          "In-Plane Switching",
-          "Internet Protocol Service",
-          "भारतीय पुलिस सेवा",
-        ],
-        points: [1, 2, 3, 4],
-      },
-    ];
+  console.log(props);
 
-    const Steps = [
-      "Interest Test",
-      "Personality Test",
-      "Abilities Test",
-      "Career Inspirational Test",
+  // Fetch Data
+  const getAllTest = () => {
+    Axios.get("/api/v1/user/tests").then((res) => {
+      res.data.allTests.length == 0
+        ? setAllTests([{ questions: [], title: "test" }])
+        : setAllTests(res.data.allTests);
+    });
+  };
+
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const data = () => {
+    const bufferQuestion = [
+      {
+        question: "test_case",
+        points: [0, 0, 0, 0],
+        options: ["test", "test", "test", "test"],
+      },
     ];
-    return { Title, Data, Steps };
+    if (allTests) {
+      const Title = allTests[activeStep].title;
+      const Data =
+        allTests[activeStep].questions.length == 0
+          ? bufferQuestion
+          : allTests[activeStep].questions;
+      const Steps = allTests.map((el) => {
+        return el.title;
+      });
+      return { Title, Data, Steps };
+    }
   };
 
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(
-    Object.keys(completedData).length
-  );
-  const [completed, setCompleted] = React.useState(completedData);
+  const [allTests, setAllTests] = useState(null);
+
+  const [completed, setCompleted] = React.useState({});
   const [completedSet, setCompletedSet] = React.useState(false);
   const [next, setNext] = React.useState(false);
 
   //Steps
   function getSteps() {
-    return data().Steps;
+    return allTests ? data().Steps : "";
   }
 
   const steps = getSteps();
@@ -135,78 +127,87 @@ function TestDashBoard(props) {
   function getStepContent(step, done) {
     return completedSet ? "" : <Test data={{ done, data: data() }} />;
   }
-
+  useEffect(() => {
+    allTests ? "" : getAllTest();
+  });
   console.log(activeStep);
 
   return (
     <div className={classes.root}>
-      <Stepper nonLinear activeStep={activeStep}>
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepButton
-              // onClick={handleStep(index)}
-              completed={completed[index]}
-            >
-              {label}
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        {allStepsCompleted() ? (
-          <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
-          </div>
-        ) : (
-          <div>
-            <Typography className={classes.instructions}>
-              {getStepContent(activeStep, done)}
-            </Typography>
-            <div>
-
-              {next ? (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  className={classes.button}
+      {allTests ? (
+        <>
+          <Stepper nonLinear activeStep={activeStep}>
+            {steps.map((label, index) => (
+              <Step key={label}>
+                <StepButton
+                  // onClick={handleStep(index)}
+                  completed={completed[index]}
                 >
-                  Next
-                </Button>
-              ) : (
-                ""
-              )}
-
-              {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography variant="caption" className={classes.completed}>
-                    Step {activeStep + 1} completed
-                  </Typography>
-                ) : completedSet ? (
-                  <>
+                  {label}
+                </StepButton>
+              </Step>
+            ))}
+          </Stepper>
+          <div>
+            {allStepsCompleted() ? (
+              <div>
+                <Typography className={classes.instructions}>
+                  All steps completed - you&apos;re finished
+                </Typography>
+              </div>
+            ) : (
+              <div>
+                <Typography className={classes.instructions}>
+                  {getStepContent(activeStep, done)}
+                </Typography>
+                <div>
+                  {next ? (
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={handleComplete}
+                      onClick={handleNext}
+                      className={classes.button}
                     >
-                      {completedSteps() === totalSteps() - 1
-                        ? "Finish"
-                        : "Complete Step"}
+                      Next
                     </Button>
-                  </>
-                ) : (
-                  ""
-                ))}
-            </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {activeStep !== steps.length &&
+                    (completed[activeStep] ? (
+                      <Typography
+                        variant="caption"
+                        className={classes.completed}
+                      >
+                        Step {activeStep + 1} completed
+                      </Typography>
+                    ) : completedSet ? (
+                      <>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleComplete}
+                        >
+                          {completedSteps() === totalSteps() - 1
+                            ? "Finish"
+                            : "Complete Step"}
+                        </Button>
+                      </>
+                    ) : (
+                      ""
+                    ))}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <CircularProgress />
+      )}
     </div>
   );
 }
-
 
 const mapStateToProps = ({ user }) => {
   return user;
