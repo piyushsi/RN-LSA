@@ -165,7 +165,7 @@ function SignIn(props) {
           </Grid>
           <Grid item>
             <Link href="/signup" variant="body2">
-              {"Don't have an account? Sign Up"}
+              {"Sign in for First Time? Sign in here"}
             </Link>
           </Grid>
         </Grid>

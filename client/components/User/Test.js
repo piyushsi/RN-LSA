@@ -75,28 +75,28 @@ export default function ListDividers(props) {
 
 
   return (
-    <section class="hero is-primary is-fullheight">
-      <div class="hero-body">
-        <div class="container">
-          <div class="columns is-mobile is-centered">
-            <div class="column is-half">
-              <div class="has-text-centered">
-                <h1 class="title has-text-centered">{title}</h1>
-                <h7 class="subtitle has-text-centered is-uppercase is-7 navigation">
+    <section className="hero is-primary is-fullheight">
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns is-mobile is-centered">
+            <div className="column is-half">
+              <div className="has-text-centered">
+                <h1 className="title has-text-centered">{title}</h1>
+                <h7 className="subtitle has-text-centered is-uppercase is-7 navigation">
                   QUESTION {count + 1} OF {data.length}
                 </h7>
-                <h5 class="subtitle has-text-centered is-5">
+                <h5 className="subtitle has-text-centered is-5">
                   {data[count].question}
                 </h5>
                 {data[count].options.map((el, i) => {
                   return (
                     <p
-                      class={`option ${
+                      className={`option ${
                         answer == i + 1 ? "answer" : ""
                       } has-text-grey-dark`}
                       onClick={(e) => setAnswer(i + 1)}
                     >
-                      <span class="has-text-weight-bold is-size-5">
+                      <span className="has-text-weight-bold is-size-5">
                         {i + 1}
                       </span>{" "}
                       {el}

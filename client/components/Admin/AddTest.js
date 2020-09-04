@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     padding: "2rem",
     textAlign: "center",
-    margin:"2rem"
+    margin: "2rem",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   main: {
     marginTop: "1rem",
     width: "100%",
-    justifyContent:"center"
+    justifyContent: "center",
   },
   demo: {
     margin: "3rem",
@@ -87,10 +87,11 @@ function AddTest(props) {
   const [selectedTest, setSelectedTest] = React.useState(null);
   const [selecctedTestTitle, setselecctedTestTitle] = React.useState(null);
 
-  const [testData, setTestData] = useState({
+  const emptyTitle = {
     title: "",
-  });
-  const [questionData, setQuestionData] = useState({
+  };
+  const [testData, setTestData] = useState(emptyTitle);
+  const emptyQuestionData = {
     question: "",
     option1: "",
     option2: "",
@@ -100,7 +101,8 @@ function AddTest(props) {
     point2: "",
     point3: "",
     point4: "",
-  });
+  };
+  const [questionData, setQuestionData] = useState(emptyQuestionData);
 
   const [allTests, setAllTests] = useState(null);
   const [open, setOpen] = React.useState(false);
@@ -120,7 +122,6 @@ function AddTest(props) {
 
   const handleClickOpen2 = (props) => {
     setSelectedDeleteQuestion(props);
-
     setOpen2(true);
   };
 
@@ -166,7 +167,10 @@ function AddTest(props) {
   const handleSubmitTest = () => {
     setAllTests(null);
     Axios.post("/api/v1/user/test", testData).then((res) => {
-      res.data.success ? getAllTest() : "";
+      if (res.data.success) {
+        getAllTest();
+        setTestData(emptyTitle);
+      }
     });
   };
 
@@ -178,16 +182,14 @@ function AddTest(props) {
       options: [x.option1, x.option2, x.option3, x.option4],
       title: selecctedTestTitle.id,
     };
-    const cache = selectedTest;
-    cache.push(addQuestion);
-    setAllTests(null);
+
     Axios.post("/api/v1/user/test/question", addQuestion).then((res) => {
       if (res.data.success) {
+        selectedTest.push(res.data.createdQuestion);
         getAllTest();
-        setSelectedTest(cache);
+        setQuestionData(emptyQuestionData);
       }
     });
-    getAllTest();
   };
 
   const handleChange = (e) => {
@@ -211,7 +213,7 @@ function AddTest(props) {
   return (
     <Grid container spacing={3} component="main" className={classes.main}>
       {/* Add Test Title here */}
-      <Grid item xs={12} sm={8} md={selectedTest?5:12}>
+      <Grid item xs={12} sm={8} md={selectedTest ? 5 : 12}>
         <Typography variant="h6" className={classes.title}>
           {allTests ? (
             allTests.length == 0 ? (
@@ -272,7 +274,7 @@ function AddTest(props) {
             onSubmit={() => handleSubmitTest()}
             onError={(errors) => console.log(errors)}
           >
-            <Grid item xs={12} md={selectedTest?12: 6}>
+            <Grid item xs={12} md={selectedTest ? 12 : 6}>
               <Typography component="h1" variant="h5">
                 Add Test
               </Typography>
@@ -308,7 +310,7 @@ function AddTest(props) {
       </Grid>
       {/* Add Title Content here */}
       {selectedTest ? (
-        <Grid item xs={12} sm={8} md={5}>
+        <Grid item xs={12} sm={8} md={5} className={classes.main}>
           <Typography variant="h6" className={classes.title}>
             {"List of Questions in " + selecctedTestTitle.title}
           </Typography>

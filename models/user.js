@@ -6,12 +6,10 @@ var userSchema = new Schema(
   {
     firstName: {
       type: String,
-      required: true,
     },
 
     lastName: {
       type: String,
-      required: true,
     },
 
     email: {
@@ -22,13 +20,29 @@ var userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
       minlength: 6,
     },
     userType: {
       type: String,
       required: true,
     },
+    userRole: {
+      type: String,
+    },
+    organisationId: {
+      type: String,
+    },
+    clients: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    tests: [
+      {
+        type: Object,
+      },
+    ],
   },
   { timestamps: true }
 );

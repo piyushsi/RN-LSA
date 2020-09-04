@@ -45,7 +45,7 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useNewUrlParser', true);
 
 // connect to mongodb
-mongoose.connect('mongodb://localhost:27017/swot', function (err) {
+mongoose.connect('mongodb://localhost:27017/swot_4', function (err) {
   console.log('mongodb connected ?', err ? false : true);
 });
 

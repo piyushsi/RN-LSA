@@ -17,6 +17,7 @@ import SubAdmin from "../components/SubAdmin";
 
 import Test from "../components/User/TestDashboard";
 import AddTest from "../components/Admin/AddTest";
+import AddUser from "../components/AddUser";
 
 function App(props) {
   const grantPermission = (requestedRoles) => {
@@ -85,12 +86,7 @@ function App(props) {
                   component={SubAdmin}
                   roles={["admin", "subadmin"]}
                 />
-                <UserBasedRouting
-                  exact
-                  path="/subadmin/test"
-                  component={AddTest}
-                  roles={["subadmin"]}
-                />
+             
                 <UserBasedRouting
                   exact
                   path="/admin/test"
@@ -103,6 +99,12 @@ function App(props) {
                   path="/user"
                   component={User}
                   roles={["user"]}
+                />
+                <UserBasedRouting
+                  exact
+                  path="/adduser"
+                  component={AddUser}
+                  roles={["admin","subadmin","user"]}
                 />
                 <UserBasedRouting
                   exact

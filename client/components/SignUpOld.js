@@ -63,7 +63,7 @@ function SignUp(props) {
     lastName: "",
     email: "",
     password: "",
-    organisationId: "KA-SWOT",
+    userType: "",
   });
 
   const handleChange = (e) => {
@@ -83,7 +83,7 @@ function SignUp(props) {
         if (res.message.includes("already")) {
           return setData((prevState) => ({
             ...prevState,
-            msg: "User with this email already done with Initial Sign in",
+            msg: "User with same email already exists",
           }));
         }
         if (res.message.includes("unauthorized")) {
@@ -111,7 +111,7 @@ function SignUp(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Initial Sign in
+          Sign up
         </Typography>
         <br />
         <ValidatorForm
@@ -186,17 +186,20 @@ function SignUp(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                autoComplete="organisationId"
-                name="organisationId"
+                autoComplete="UserType"
+                name="userType"
                 variant="outlined"
                 fullWidth
-                id="organisationId"
-                label="Organisation ID"
+                id="userType"
+                label="User Type"
                 autoFocus
-                // onChange={handleChange}
-                value={data.organisationId}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
+                onChange={handleChange}
+                value={data.userType}
+                validators={["required", "matchRegexp:user|admin|subadmin"]}
+                errorMessages={[
+                  "this field is required",
+                  "user or admin or subadmin",
+                ]}
               />
             </Grid>
 
@@ -220,14 +223,14 @@ function SignUp(props) {
             {props.isAuthInProgress ? (
               <CircularProgress style={{ color: "white" }} />
             ) : (
-              "Sign in"
+              "Sign Up"
             )}
           </Button>
         </ValidatorForm>
         <Grid container justify="flex-end">
           <Grid item>
             <Link href="/login" variant="body2">
-              Not Sign in for the First Time? Sign in here
+              Already have an account? Sign in
             </Link>
           </Grid>
         </Grid>

@@ -244,6 +244,19 @@ function Header(props) {
               </ListItem>
             </Rlink>
           </List>
+          <List>
+            <Rlink
+              to={"/adduser"}
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              <ListItem button key={"Add User"}>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Add User"} />
+              </ListItem>
+            </Rlink>
+          </List>
         </Drawer>
       ) : (
         ""
