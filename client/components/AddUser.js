@@ -193,15 +193,18 @@ function SignUp(props) {
             ]}
           />
         </div>
-        {!canAdd ? (
-          <div className={classes.text}>Select a Parent User to add</div>
-        ) : (
-          ""
-        )}
+
         <Typography component="h1" variant="h5">
           Add User
         </Typography>
         <br />
+        {!canAdd ? (
+          <div style={{ color: "red" }} className={classes.text}>
+            Select a Parent User to add
+          </div>
+        ) : (
+          ""
+        )}
         <ValidatorForm
           className={classes.form}
           onSubmit={() => handleSubmit()}
@@ -278,23 +281,6 @@ function SignUp(props) {
                   );
                 })}
                 <br />
-
-                {/* <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel htmlFor="outlined-age-native-simple">
-                    parentUser
-                  </InputLabel>
-                  <Select
-                    native
-                    name="id"
-                    value={data.id}
-                    label="id"
-                    onChange={handleChange}
-                  >
-                    {levelData.map((el) => {
-                      return <option value={el._id}>{el.email}</option>;
-                    })}
-                  </Select>
-                </FormControl> */}
               </Grid>
             ) : (
               ""
