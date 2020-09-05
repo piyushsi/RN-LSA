@@ -61,7 +61,6 @@ function App(props) {
   });
 
   let token = localStorage.user ? JSON.parse(localStorage.user).token : null;
-  let type = props.UserType;
 
   return (
     <div>
@@ -74,43 +73,31 @@ function App(props) {
               <Header />
               <Switch>
                 <Route exact path="/" component={HomePage} />
+
                 <UserBasedRouting
                   exact
-                  path="/admin"
-                  component={Admin}
-                  roles={["admin", "subadmin"]}
-                />
-                <UserBasedRouting
-                  exact
-                  path="/subadmin"
-                  component={SubAdmin}
-                  roles={["admin", "subadmin"]}
-                />
-             
-                <UserBasedRouting
-                  exact
-                  path="/admin/test"
+                  path="/user/addtest/"
                   component={AddTest}
-                  roles={["admin", "subadmin"]}
+                  roles={["L1", "L2", "L3", "L4"]}
                 />
 
                 <UserBasedRouting
                   exact
-                  path="/user"
+                  path="/user/dashboard/"
                   component={User}
-                  roles={["user"]}
+                  roles={["L1", "L2", "L3", "L4"]}
                 />
                 <UserBasedRouting
                   exact
-                  path="/adduser"
+                  path="/user/adduser/"
                   component={AddUser}
-                  roles={["admin","subadmin","user"]}
+                  roles={["L1", "L2", "L3", "L4"]}
                 />
                 <UserBasedRouting
                   exact
-                  path="/user/test"
+                  path="/user/test/"
                   component={Test}
-                  roles={["user", "subadmin"]}
+                  roles={["L1", "L2", "L3", "L4"]}
                 />
                 <Route component={PageNotFound} />
               </Switch>

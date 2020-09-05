@@ -17,27 +17,6 @@ router.get("/signup", function (req, res, next) {
   res.json({ type: "users", success: false });
 });
 
-// router.post("/signup", (req, res, next) => {
-//   const { email } = req.body;
-//   User.findOne({ email }, (err, user) => {
-//     if (err) return next(err);
-//     if (!user) {
-//       User.create(req.body, async (err, createdUser) => {
-//         if (err) return next(err);
-//         var token = await auth.generateJWT(createdUser);
-//         res.json({ data: createdUser, type: "users", success: true, token });
-//       });
-//     } else {
-//       res.json({
-//         type: "users",
-//         success: false,
-//         message: "Email already used",
-//       });
-//     }
-//   });
-// });
-
-// changes made for Authoriztion
 router.post("/signup", (req, res, next) => {
   const { email } = req.body;
   const { password } = req.body;
@@ -46,7 +25,8 @@ router.post("/signup", (req, res, next) => {
     ? User.findOne({ email }, (err, user) => {
         if (err) return next(err);
         if (!user) {
-          req.body.userType = "admin";
+          req.body.userType = "L1";
+          req.body.userRole = "Admin";
           User.create(req.body, async (err, createdUser) => {
             if (err) return next(err);
             var token = await auth.generateJWT(createdUser);
@@ -96,14 +76,13 @@ router.post("/signup", (req, res, next) => {
 });
 
 //experiment
-
 router.post("/user/add", (req, res) => {
   console.log(req.body);
-  var { id, email, userType } = req.body;
+  var { id, email, userType,userRole } = req.body;
   User.findOne({ email }, (err, user) => {
     if (err) return res.json({ type: "user", success: false });
     if (!user) {
-      User.create({ email, userType }, (err, createdUser) => {
+      User.create({ email, userType,userRole }, (err, createdUser) => {
         if (err) return next(err);
         User.findByIdAndUpdate(
           id,
@@ -129,7 +108,18 @@ router.post("/user/add", (req, res) => {
 router.post("/login", (req, res) => {
   var { email, password } = req.body;
   User.findOne({ email })
-    .populate("clients")
+    .populate({
+      path: "clients",
+      populate: {
+        path: "clients",
+        populate: {
+          path: "clients",
+          populate: {
+            path: "clients",
+          },
+        },
+      },
+    })
     .exec(async (err, user) => {
       if (err) return res.json({ type: "user", success: false });
       if (!user)

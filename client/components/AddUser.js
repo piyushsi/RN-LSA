@@ -16,13 +16,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Tree from "react-d3-tree";
-import "regenerator-runtime";
 import {
   ValidatorForm,
   TextValidator as TextField,
 } from "react-material-ui-form-validator";
 import Axios from "axios";
 import { useEffect } from "react";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import Chip from "@material-ui/core/Chip";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,56 +46,131 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  formControl: {
+    margin: theme.spacing(0),
+    minWidth: 120,
+  },
+  text: {
+    textAlign: "center",
+  },
 }));
 
 function SignUp(props) {
   const classes = useStyles();
 
-  const [data, setData] = useState({
-    email: "",
-    userType: "",
-    id: props.currentUser._id,
-  });
-
   const handleChange = (e) => {
+    setMessage(null);
     const { name, value } = e.target;
     setData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
+  const [canAdd, setCanAdd] = useState(true);
+
+  const handleChangeLevel = (e) => {
+    setMessage(null);
+    const { name, value } = e.target;
+    props.currentUser.userType == `L${value[1] - 1}`
+      ? setCanAdd(true)
+      : setCanAdd(false);
+    props.currentUser.userType == `L${value[1] - 1}`
+      ? setData((prevState) => ({
+          ...prevState,
+          [name]: value,
+          id: props.currentUser._id,
+        }))
+      : setData((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }));
+  };
+
   const [render, setRender] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const handleSubmit = () => {
+    setMessage(null);
     Axios.post("/api/v1/user/user/add", data).then((res) => {
-      setRender(true);
+      if (res.data.success) {
+        setMessage("Added");
+      } else {
+        res.data.message.includes("already")
+          ? setMessage("Email is already added")
+          : setMessage("Unkown Error");
+      }
     });
   };
 
+  const [lastLevel, setLastLevel] = useState(
+    `L${+props.currentUser.userType[1] + 1}`
+  );
+
+  const level = (val) => {
+    var arr = ["L1", "L2", "L3", "L4"];
+    var res = [];
+    var store = false;
+    arr.forEach((a) => {
+      if (a == props.currentUser.userType) {
+        store = true;
+      } else {
+        store ? res.push(a) : "";
+      }
+    });
+
+    return res;
+  };
+
+  const [data, setData] = useState({
+    email: "",
+    userRole: "",
+    userType: level()[0],
+    id: props.currentUser._id,
+  });
+
+  const levelWiseUsers = (x) => {
+    var res = [];
+    function rec(arr) {
+      arr.forEach((a) => {
+        a.userType == x ? res.push(a) : rec(a.clients);
+      });
+    }
+    rec(props.currentUser.clients);
+    return res;
+  };
+
   const tree = (arr) => {
-    return arr.length == 0
+    arr && arr.length != 0 ? setLastLevel(`L${+arr[0].userType[1] + 1}`) : "";
+    return !arr || arr.length == 0
       ? ""
       : arr.map((el) => {
           return {
-            name: el.email,
+            name: el.firstName ? el.firstName : el.email,
             attributes: {
               userType: el.userType,
-              org: el.organisationId ? el.organisationId : "Not Registered",
+              Reg: el.organisationId ? el.organisationId : "Not Registered",
+              Role: el.userRole,
             },
-            children: el.clients[0] ? tree(el.clients) : "",
+            children: !el.clients || el.clients[0] ? tree(el.clients) : "",
           };
         });
   };
-  const [treeData, setTreeData] = useState(null);
 
+  const [treeData, setTreeData] = useState(null);
   useEffect(() => {
     treeData ? "" : setTreeData(tree(props.currentUser.clients));
   });
 
+  var levelData =
+    data.userType != level()[0]
+      ? levelWiseUsers(`L${data.userType[1] - 1}`)
+      : null;
+
+  console.log(data);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
@@ -106,13 +185,19 @@ function SignUp(props) {
                 name: props.currentUser.firstName,
                 attributes: {
                   userType: props.currentUser.userType,
-                  org: props.currentUser.organisationId,
+                  Reg: props.currentUser.organisationId,
+                  Role: props.currentUser.userRole,
                 },
                 children: treeData ? treeData : "",
               },
             ]}
           />
         </div>
+        {!canAdd ? (
+          <div className={classes.text}>Select a Parent User to add</div>
+        ) : (
+          ""
+        )}
         <Typography component="h1" variant="h5">
           Add User
         </Typography>
@@ -139,34 +224,100 @@ function SignUp(props) {
               />
             </Grid>
 
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={3}>
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel htmlFor="outlined-age-native-simple">
+                  userType
+                </InputLabel>
+                <Select
+                  native
+                  name="userType"
+                  value={data.userType}
+                  label="userType"
+                  onChange={handleChangeLevel}
+                >
+                  {level().map((el) => {
+                    return el <= lastLevel ? (
+                      <option value={el}>{el}</option>
+                    ) : (
+                      ""
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={12}>
               <TextField
                 variant="outlined"
                 fullWidth
-                id="userType"
-                label="User Type"
-                name="userType"
-                autoComplete="lname"
+                id="userRole"
+                label="User Role"
+                name="userRole"
+                autoComplete="userRole"
                 onChange={handleChange}
-                value={data.userType}
+                value={data.userRole}
                 validators={["required"]}
                 errorMessages={["this field is required"]}
               />
             </Grid>
+            {levelData ? (
+              <Grid item xs={12}>
+                {levelData.map((el) => {
+                  return (
+                    <Chip
+                      clickable
+                      variant="outlined"
+                      color="primary"
+                      avatar={<Avatar>{el.userType}</Avatar>}
+                      label={el.email}
+                      onClick={() => {
+                        handleChange({ target: { name: "id", value: el._id } });
+                        setCanAdd(true);
+                      }}
+                    />
+                  );
+                })}
+                <br />
+
+                {/* <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel htmlFor="outlined-age-native-simple">
+                    parentUser
+                  </InputLabel>
+                  <Select
+                    native
+                    name="id"
+                    value={data.id}
+                    label="id"
+                    onChange={handleChange}
+                  >
+                    {levelData.map((el) => {
+                      return <option value={el._id}>{el.email}</option>;
+                    })}
+                  </Select>
+                </FormControl> */}
+              </Grid>
+            ) : (
+              ""
+            )}
           </Grid>
           <Typography style={{ color: "red" }}>
             {data.msg ? data.msg : ""}
           </Typography>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Add
-          </Button>
+          {canAdd ? (
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Add
+            </Button>
+          ) : (
+            ""
+          )}
         </ValidatorForm>
+        {message ? <Typography>{message}</Typography> : ""}
         <Grid container justify="flex-end"></Grid>
         {/* </form> */}
       </div>

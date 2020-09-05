@@ -220,7 +220,7 @@ function Header(props) {
           <Divider />
           <List>
             <Rlink
-              to={"/" + props.currentUser.userType}
+              to={"/user/dashboard"}
               style={{ textDecoration: "none", color: "black" }}
             >
               <ListItem button key={"DashBoard"}>
@@ -233,7 +233,7 @@ function Header(props) {
           </List>
           <List>
             <Rlink
-              to={"/" + props.currentUser.userType + "/test"}
+              to={"/user/test"}
               style={{ textDecoration: "none", color: "black" }}
             >
               <ListItem button key={"Test"}>
@@ -246,7 +246,7 @@ function Header(props) {
           </List>
           <List>
             <Rlink
-              to={"/adduser"}
+              to={"/user/adduser"}
               style={{ textDecoration: "none", color: "black" }}
             >
               <ListItem button key={"Add User"}>
