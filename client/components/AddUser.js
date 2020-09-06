@@ -27,7 +27,7 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import Chip from "@material-ui/core/Chip";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import { identifyLoggedUser } from "../store/actions";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(13),
@@ -94,6 +94,7 @@ function SignUp(props) {
     Axios.post("/api/v1/user/user/add", data).then((res) => {
       if (res.data.success) {
         setMessage("Added");
+        props.dispatch(identifyLoggedUser());
       } else {
         res.data.message.includes("already")
           ? setMessage("Email is already added")
@@ -180,6 +181,8 @@ function SignUp(props) {
           style={{ width: "80vw", height: "70vh", border: "1px solid black" }}
         >
           <Tree
+            translate={{ x: 20, y: 280 }}
+            nodeSvgShape={{ shape: "circle", shapeProps: { r: 10 } }}
             data={[
               {
                 name: props.currentUser.firstName,

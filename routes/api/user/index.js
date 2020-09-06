@@ -129,18 +129,18 @@ router.post("/login", (req, res) => {
       },
     })
     .exec(async (err, user) => {
-      if (!user.password)
-        return res.json({
-          type: "user",
-          success: false,
-          message: "Initial Sign in Required",
-        });
       if (err) return res.json({ type: "user", success: false });
       if (!user)
         return res.json({
           type: "user",
           success: false,
           message: "Email not Registered",
+        });
+      if (!user.password)
+        return res.json({
+          type: "user",
+          success: false,
+          message: "Initial Sign in Required",
         });
       if (!user.verifyPassword(password))
         return res.json({

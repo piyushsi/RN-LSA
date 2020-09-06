@@ -171,7 +171,7 @@ function SignUp(props) {
                 variant="outlined"
                 fullWidth
                 name="password"
-                label="Password"
+                label="Set Password"
                 type="password"
                 id="password"
                 autoComplete="current-password"

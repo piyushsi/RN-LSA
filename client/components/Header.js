@@ -149,7 +149,7 @@ function Header(props) {
                 </Button>
               </Link>
               <Link href="/signup">
-                <Button variant="contained">Sign Up</Button>
+                <Button variant="contained">Get Started</Button>
               </Link>
             </div>
           ) : (
