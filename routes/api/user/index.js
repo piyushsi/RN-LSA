@@ -49,11 +49,20 @@ router.post("/signup", (req, res, next) => {
         req.body.password = bcrypt.hashSync(password, 10);
         if (err) return next(err);
         if (user && !user.firstName) {
-          User.findByIdAndUpdate(
-            user.id,
-            req.body,
-            { new: true },
-            async (err, createdUser) => {
+          User.findByIdAndUpdate(user.id, req.body, { new: true })
+            .populate({
+              path: "clients",
+              populate: {
+                path: "clients",
+                populate: {
+                  path: "clients",
+                  populate: {
+                    path: "clients",
+                  },
+                },
+              },
+            })
+            .exec(async (err, createdUser) => {
               if (err) return next(err);
               var token = await auth.generateJWT(createdUser);
               res.json({
@@ -62,8 +71,7 @@ router.post("/signup", (req, res, next) => {
                 success: true,
                 token,
               });
-            }
-          );
+            });
         } else {
           console.log(user);
           res.json({
@@ -78,11 +86,11 @@ router.post("/signup", (req, res, next) => {
 //experiment
 router.post("/user/add", (req, res) => {
   console.log(req.body);
-  var { id, email, userType,userRole } = req.body;
+  var { id, email, userType, userRole } = req.body;
   User.findOne({ email }, (err, user) => {
     if (err) return res.json({ type: "user", success: false });
     if (!user) {
-      User.create({ email, userType,userRole }, (err, createdUser) => {
+      User.create({ email, userType, userRole }, (err, createdUser) => {
         if (err) return next(err);
         User.findByIdAndUpdate(
           id,
@@ -121,6 +129,12 @@ router.post("/login", (req, res) => {
       },
     })
     .exec(async (err, user) => {
+      if (!user.password)
+        return res.json({
+          type: "user",
+          success: false,
+          message: "Initial Sign in Required",
+        });
       if (err) return res.json({ type: "user", success: false });
       if (!user)
         return res.json({
